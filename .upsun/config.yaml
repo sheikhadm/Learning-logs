@@ -5,9 +5,9 @@ applications:
       root: "Llogs"   # folder containing manage.py
     dependencies:
       python3:
-        - Django>=4.2,<5.0
-        - gunicorn
-        - psycopg2-binary
+        Django: ">=4.2,<5.0"
+        gunicorn: "*"
+        psycopg2-binary: "*"
     web:
       commands:
         start: "gunicorn --pythonpath=. -b unix:$SOCKET Llogs.wsgi --log-file -"
@@ -27,7 +27,6 @@ applications:
       deploy: |
         set -eux
         python manage.py migrate
-    # Define relationships **inside the application**, not top-level
     relationships:
       postgresql: postgresql:18
 
