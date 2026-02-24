@@ -1,5 +1,3 @@
-# Learning-Logs Upsun deployment configuration
-
 applications:
   learning_logs:
     type: python:3.13
@@ -29,14 +27,13 @@ applications:
       deploy: |
         set -eux
         python manage.py migrate
+    # Define relationships **inside the application**, not top-level
+    relationships:
+      postgresql: postgresql:18
 
 services:
   postgresql:
     type: postgresql:18
-
-relationships:
-  learning_logs:
-    postgresql: postgresql:18
 
 routes:
   "https://{default}/":
