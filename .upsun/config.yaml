@@ -28,9 +28,9 @@ services:
     type: postgresql:18
 
 routes:
-  "/":
+  "https://{default}/":
     type: wsgi
     application: learning_logs
   "https://www.{default}/":
     type: redirect
-    to: "/"
+    to: "https://{default}/"
