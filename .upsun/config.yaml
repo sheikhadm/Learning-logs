@@ -1,13 +1,14 @@
 # Complete list of all available properties: https://docs.upsun.com/app/reference/
 applications:
-  c-users-user-desktop-learning_logs:
+  name: learning_logs         # must be <32 chars, letters/numbers/underscores
+  type: python:3.13 
     # Application source code directory
-    source:
-      root: "./"  # The root folder of your app
+  source:
+    root: "./"  # The root folder of your app
 
   # The runtime the application uses.
   # Complete list of available runtimes: https://docs.upsun.com/app/reference/type/
-    type: python:3.13
+    
 
     # Choose which container profile (ratio CPU+RAM) your app will use. Default value comes from the image itself.
     # More information: https://docs.upsun.com/anchors/resources/manage/configuration/profiles/adjust/
