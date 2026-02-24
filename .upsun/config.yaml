@@ -32,7 +32,6 @@ routes:
   "/":
     type: wsgi
     application: learning_logs
-
-redirects:
   "www":
+    type: redirect
     to: "/"
