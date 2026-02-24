@@ -18,10 +18,9 @@ applications:
     # to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
     # side is in the form `<service name>:<endpoint name>`.
     # More information: https://docs.upsun.com/app/reference/relationships/
-    
-    # relationships:
-    #   db:
-    
+    relationships:
+      postgresql:
+      
 
     # Mounts define directories that are writable after the build is complete.
     # More information: https://docs.upsun.com/app/reference/mounts/
@@ -130,10 +129,11 @@ applications:
 # to power your Upsun project.
 # More information: https://docs.upsun.com/services/
 # Full list of available services: https://docs.upsun.com/services/available/
-# services:
-#   db:
-#     type: postgresql:17
+services:
+  postgresql:
+    type: postgresql:18 # All available versions are: 18, 17, 16, 15, 14, 13, 12
 
+  
 
 # The routes of the project.
 #
