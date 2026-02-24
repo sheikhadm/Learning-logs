@@ -28,11 +28,11 @@ applications:
         set -eux
         python manage.py migrate
     relationships:
-      postgresql: postgresql:default   # ✅ corrected endpoint
+      postgresql: postgresql   # ✅ just the service name
 
 services:
   postgresql:
-    type: postgresql:18   # service name matches application relationship
+    type: postgresql:18   # service name matches relationship
 
 routes:
   "https://{default}/":
