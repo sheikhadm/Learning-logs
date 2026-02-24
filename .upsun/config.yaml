@@ -2,10 +2,10 @@ applications:
   learning_logs:
     type: python:3.13
     source:
-      root: "./"
+      root: "Llogs"   # folder containing manage.py
     web:
       commands:
-        start: "gunicorn --pythonpath=. -b unix:$SOCKET learning_logs.wsgi --log-file -"
+        start: "gunicorn --pythonpath=. -b unix:$SOCKET Llogs.wsgi --log-file -"
       upstream:
         socket_family: unix
       locations:
@@ -18,10 +18,10 @@ applications:
     hooks:
       build: |
         set -eux
-        python Llogs/manage.py collectstatic --noinput
+        python manage.py collectstatic --noinput
       deploy: |
         set -eux
-        python Llogs/manage.py migrate
+        python manage.py migrate
 
 services:
   postgresql:
