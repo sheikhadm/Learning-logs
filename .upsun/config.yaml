@@ -142,11 +142,7 @@ services:
 # to be processed by Upsun.
 # More information: https://docs.upsun.com/routes/
 routes:
-  "https://{default}/":
-    type: upstream
-    upstream: "c-users-user-desktop-learning_logs:http"
-  # A basic redirect definition
-  # More information: https://docs.upsun.com/routes/examples/redirect/
-  "https://www.{default}":
-    type: redirect
-    to: "https://{default}/"
+  - path: /                  # top-level URL path
+    type: wsgi               # for Django apps
+    application: learning_logs
+    entrypoint: learning_logs.wsgi:application
