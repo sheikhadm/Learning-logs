@@ -29,8 +29,8 @@ services:
 
 routes:
   "https://{default}/":
-    type: wsgi
-    application: learning_logs
+    type: upstream
+    upstream: "learning_logs:http"
   "https://www.{default}/":
     type: redirect
     to: "https://{default}/"
