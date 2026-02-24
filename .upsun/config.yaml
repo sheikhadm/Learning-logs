@@ -3,7 +3,6 @@ applications:
     type: python:3.13
     source:
       root: "./"
-    entrypoint: learning_logs.wsgi:application
     web:
       commands:
         start: "gunicorn --pythonpath=. -b unix:$SOCKET learning_logs.wsgi --log-file -"
@@ -32,6 +31,6 @@ routes:
   "/":
     type: wsgi
     application: learning_logs
-  "www":
+  "https://www.{default}/":
     type: redirect
     to: "/"
