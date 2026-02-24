@@ -1,8 +1,15 @@
+# Learning-Logs Upsun deployment configuration
+
 applications:
   learning_logs:
     type: python:3.13
     source:
       root: "Llogs"   # folder containing manage.py
+    dependencies:
+      python3:
+        - Django>=4.2,<5.0
+        - gunicorn
+        - psycopg2-binary
     web:
       commands:
         start: "gunicorn --pythonpath=. -b unix:$SOCKET Llogs.wsgi --log-file -"
@@ -26,6 +33,10 @@ applications:
 services:
   postgresql:
     type: postgresql:18
+
+relationships:
+  learning_logs:
+    postgresql: postgresql:18
 
 routes:
   "https://{default}/":
