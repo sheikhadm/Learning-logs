@@ -10,7 +10,7 @@ applications:
         psycopg2-binary: "*"
     web:
       commands:
-        start: "gunicorn --pythonpath=. -b unix:$SOCKET Llogs.wsgi --log-file -"
+        start: "gunicorn -b unix:$SOCKET config.wsgi"
       upstream:
         socket_family: unix
       locations:
@@ -23,12 +23,22 @@ applications:
     hooks:
       build: |
         set -eux
-        python manage.py collectstatic --noinput
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        npm install
+        npm run build 
+        
       deploy: |
         set -eux
+        python manage.py collectstatic --noinput
         python manage.py migrate
     relationships:
       postgresql: postgresql   # ✅ just the service name
+    
+    mounts:
+      "/staticfiles":
+        source: "local"
+        source_path: "static_assets"
 
 services:
   postgresql:
