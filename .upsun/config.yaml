@@ -33,7 +33,7 @@ applications:
         python manage.py collectstatic --noinput
         python manage.py migrate
     relationships:
-      database: postgresql:db   # ✅ just the service name
+      database: postgresql:postgresql  # ✅ just the service name
     
     mounts:
       "/staticfiles":
