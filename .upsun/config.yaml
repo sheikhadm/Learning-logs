@@ -10,7 +10,7 @@ applications:
         psycopg2-binary: "*"
     web:
       commands:
-        start: "gunicorn ll_project.wsgi:application"
+        start: "gunicorn --chdir Llogs ll_project.wsgi:application"
       upstream:
         socket_family: unix
       locations:
