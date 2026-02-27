@@ -121,21 +121,16 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
         SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
 
     # Production database configuration.
-    if (os.getenv('PLATFORM_ENVIRONMENT') is not None):
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.getenv('DB_DATABASE'),
-                'USER': os.getenv('DB_USERNAME'),
-                'PASSWORD': os.getenv('DB_PASSWORD'),
-                'HOST': os.getenv('DB_HOST'),
-                'PORT': os.getenv('DB_PORT'),
-            },
+   
 
-            'sqlite': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
+    if os.getenv("PLATFORM_ENVIRONMENT"):
+        DEBUG = False
+
+        DATABASES = {
+            "default": dj_database_url.config(
+                conn_max_age=600,
+                ssl_require=False,
+            )
         }
 
 
