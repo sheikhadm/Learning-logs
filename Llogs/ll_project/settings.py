@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import json
 import dj_database_url
 
 
@@ -123,13 +124,22 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
     # Production database configuration.
    
 
-    if os.getenv("PLATFORM_ENVIRONMENT"):
-        DEBUG = False
+    if os.getenv("PLATFORM_RELATIONSHIPS"):
+        relationships = json.loads(
+            os.getenv("PLATFORM_RELATIONSHIPS")
+        )
+
+        postgres = relationships["postgresql"][0]
+
+        DATABASE_URL = (
+            f"postgresql://{postgres['username']}:{postgres['password']}"
+            f"@{postgres['host']}:{postgres['port']}/{postgres['path']}"
+        )
 
         DATABASES = {
-            "default": dj_database_url.config(
+            "default": dj_database_url.parse(
+                DATABASE_URL,
                 conn_max_age=600,
-                ssl_require=False,
             )
         }
 
