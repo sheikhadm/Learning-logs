@@ -125,9 +125,12 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
    
 
     if os.getenv("PLATFORM_RELATIONSHIPS"):
-        relationships = json.loads(
-            os.getenv("PLATFORM_RELATIONSHIPS")
-        )
+        platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
+
+        if platform_relationships:
+            relationships = json.loads(platform_relationships)
+        else:
+            relationships = {}
 
         postgres = relationships["postgresql"][0]
 
