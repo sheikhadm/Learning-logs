@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q*fol4@#ue1zfga010y0dbim3zvgo89w)iqi9ilp4to$r=6y%^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("PLATFORM_ENVIRONMENT") is None
 
 ALLOWED_HOSTS = ['*']
 
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 # Add this near the bottom of your settings.py file, before the Production/Upsun settings
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Production/Upsun settings.
 if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
     DEBUG = False
