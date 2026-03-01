@@ -125,22 +125,27 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
     if platform_relationships and platform_relationships.strip():
-        relationships = json.loads(platform_relationships)
-
-        # find postgres relationship dynamically
-        for rel in relationships.values():
-            if rel and rel[0].get("scheme") == "postgresql":
-                postgres = rel[0]
-
-                DATABASES["default"] = {
-                    "ENGINE": "django.db.backends.postgresql",
-                    "NAME": postgres["path"],
-                    "USER": postgres["username"],
-                    "PASSWORD": postgres["password"],
-                    "HOST": postgres["host"],
-                    "PORT": postgres["port"],
-                }
-                break
+        try:
+            relationships = json.loads(platform_relationships)
+            
+            # find postgres relationship dynamically
+            for rel in relationships.values():
+                if rel and rel[0].get("scheme") == "postgresql":
+                    postgres = rel[0]
+                    
+                    DATABASES["default"] = {
+                        "ENGINE": "django.db.backends.postgresql",
+                        "NAME": postgres["path"],
+                        "USER": postgres["username"],
+                        "PASSWORD": postgres["password"],
+                        "HOST": postgres["host"],
+                        "PORT": postgres["port"],
+                    }
+                    break
+        except (json.JSONDecodeError, KeyError, IndexError) as e:
+            # If anything goes wrong with PostgreSQL config, stick with SQLite
+            print(f"Warning: Could not configure PostgreSQL database: {e}")
+            pass
     # if os.getenv("PLATFORM_RELATIONSHIPS"):
     #     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
