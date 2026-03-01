@@ -8,9 +8,9 @@ applications:
         Django: ">=4.2,<5.0"
         gunicorn: "*"
         psycopg2-binary: "*"
-    web:
+    web:                            #"gunicorn -b unix:$SOCKET ll_project.wsgi:application"
       commands:
-        start: "gunicorn -b unix:$SOCKET ll_project.wsgi:application"
+        start: "gunicorn ll_project.wsgi"
       upstream:
         socket_family: unix
       locations:
