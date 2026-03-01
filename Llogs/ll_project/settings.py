@@ -124,7 +124,7 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
    
     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
-    if platform_relationships:
+    if platform_relationships and platform_relationships.strip():
         relationships = json.loads(platform_relationships)
 
         # find postgres relationship dynamically
