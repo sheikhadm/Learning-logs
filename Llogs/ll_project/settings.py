@@ -132,7 +132,11 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
         except json.JSONDecodeError:
             relationships = {}
 
-        postgres = relationships["postgresql"][0]
+        postgres = None
+
+        if relationships:
+            # get first available relationship automatically
+            postgres = list(relationships.values())[0][0]
 
         DATABASE_URL = (
             f"postgresql://{postgres['username']}:{postgres['password']}"
