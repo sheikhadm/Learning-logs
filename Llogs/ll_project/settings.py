@@ -108,6 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# Add this near the bottom of your settings.py file, before the Production/Upsun settings
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Production/Upsun settings.
 if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
     DEBUG = False
