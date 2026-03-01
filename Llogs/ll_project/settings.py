@@ -84,11 +84,10 @@ WSGI_APPLICATION = 'll_project.wsgi.application'
 
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///db.sqlite3",
-        conn_max_age=600,
-        ssl_require=False,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
 }
 
 
@@ -123,32 +122,50 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
 
     # Production database configuration.
    
+    platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
-    if os.getenv("PLATFORM_RELATIONSHIPS"):
-        platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
+    if platform_relationships:
+        relationships = json.loads(platform_relationships)
 
-        try:
-            relationships = json.loads(platform_relationships) if platform_relationships.strip() else {}
-        except json.JSONDecodeError:
-            relationships = {}
+        # find postgres relationship dynamically
+        for rel in relationships.values():
+            if rel and rel[0].get("scheme") == "postgresql":
+                postgres = rel[0]
 
-        postgres = None
+                DATABASES["default"] = {
+                    "ENGINE": "django.db.backends.postgresql",
+                    "NAME": postgres["path"],
+                    "USER": postgres["username"],
+                    "PASSWORD": postgres["password"],
+                    "HOST": postgres["host"],
+                    "PORT": postgres["port"],
+                }
+                break
+    # if os.getenv("PLATFORM_RELATIONSHIPS"):
+    #     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
-        if relationships:
-            # get first available relationship automatically
-            postgres = list(relationships.values())[0][0]
+    #     try:
+    #         relationships = json.loads(platform_relationships) if platform_relationships.strip() else {}
+    #     except json.JSONDecodeError:
+    #         relationships = {}
 
-        DATABASE_URL = (
-            f"postgresql://{postgres['username']}:{postgres['password']}"
-            f"@{postgres['host']}:{postgres['port']}/{postgres['path']}"
-        )
+    #     postgres = None
 
-        DATABASES = {
-            "default": dj_database_url.parse(
-                DATABASE_URL,
-                conn_max_age=600,
-            )
-        }
+    #     if relationships:
+    #         # get first available relationship automatically
+    #         postgres = list(relationships.values())[0][0]
+
+    #     DATABASE_URL = (
+    #         f"postgresql://{postgres['username']}:{postgres['password']}"
+    #         f"@{postgres['host']}:{postgres['port']}/{postgres['path']}"
+    #     )
+
+    #     DATABASES = {
+    #         "default": dj_database_url.parse(
+    #             DATABASE_URL,
+    #             conn_max_age=600,
+    #         )
+    #     }
 
 
 # Internationalization
