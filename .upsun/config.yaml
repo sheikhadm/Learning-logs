@@ -10,7 +10,7 @@ applications:
         psycopg2-binary: "*"
     web:                            #"gunicorn -b unix:$SOCKET ll_project.wsgi:application"
       commands:
-        start: "gunicorn ll_project.wsgi"
+        start: "gunicorn -b unix:$SOCKET ll_project.wsgi:application"
       upstream:
         socket_family: unix
       locations:
