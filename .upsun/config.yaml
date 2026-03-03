@@ -3,11 +3,11 @@ applications:
     type: python:3.13
     source:
       root: "Llogs"   # folder containing manage.py
-    dependencies:
-      python3:
-        Django: ">=4.2,<5.0"
-        gunicorn: "*"
-        psycopg2-binary: "*"
+    # dependencies:
+    #   python3:
+    #     Django: ">=4.2,<5.0"
+    #     gunicorn: "*"
+    #     psycopg2-binary: "*"
     web:                            #"gunicorn -b unix:$SOCKET ll_project.wsgi:application"
       commands:
         start: "gunicorn -b unix:$SOCKET ll_project.wsgi:application"
@@ -19,7 +19,7 @@ applications:
         "/static":
           allow: true
           expires: "1h"
-          root: "static"
+          root: "staticfiles"
     hooks:
       build: |
         set -eux

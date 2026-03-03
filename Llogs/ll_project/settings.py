@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import json
+import base64
 import dj_database_url
 
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,8 +117,8 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
     DEBUG = False
 
     # Static dir.
-    if (os.getenv('PLATFORM_APP_DIR') is not None):
-        STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
+    # if (os.getenv('PLATFORM_APP_DIR') is not None):
+    #     STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
 
     # Secret Key.
     if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
@@ -128,7 +130,8 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
 
     if platform_relationships and platform_relationships.strip():
         try:
-            relationships = json.loads(platform_relationships)
+            # relationships = json.loads(platform_relationships)
+            relationships = json.loads(base64.b64decode(platform_relationships).decode("utf-8"))
             
             # find postgres relationship dynamically
             for rel in relationships.values():
