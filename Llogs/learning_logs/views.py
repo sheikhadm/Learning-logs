@@ -5,14 +5,14 @@ from .models import Topic,Entry
 from .forms import TopicForm, EntryForm
 # Create your views here.
 def index(request):
-    return render(request, 'learning_logs/index.xhtml')
+    return render(request, 'learning_logs/index.html')
 
 @login_required
 def topics(request):
     topics = Topic.objects.order_by('date_added')
     topics = Topic.objects.filter(owner=request.user).order_by('date_added')
     context = {'topics': topics}
-    return render(request, 'learning_logs/topics.xhtml', context)
+    return render(request, 'learning_logs/topics.html', context)
 
 @login_required
 def topic(request, topic_id):
@@ -21,7 +21,7 @@ def topic(request, topic_id):
         raise Http404
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
-    return render(request, 'learning_logs/topic.xhtml', context)
+    return render(request, 'learning_logs/topic.html', context)
 
 @login_required
 def new_topic(request):
@@ -36,7 +36,7 @@ def new_topic(request):
             new_topic.save()
             return redirect('learning_logs:topics')
     context = {'form': form}
-    return render(request, 'learning_logs/new_topic.xhtml', context)
+    return render(request, 'learning_logs/new_topic.html', context)
 
 @login_required
 def new_entry(request,topic_id):
@@ -54,7 +54,7 @@ def new_entry(request,topic_id):
             return redirect('learning_logs:topic', topic_id=topic_id)
 # Display a blank or invalid form.
     context = {'topic': topic, 'form': form}
-    return render(request, 'learning_logs/new_entry.xhtml', context)
+    return render(request, 'learning_logs/new_entry.html', context)
 
 @login_required
 def edit_entry(request,entry_id):
@@ -70,4 +70,4 @@ def edit_entry(request,entry_id):
             form.save()
             return redirect('learning_logs:topic', topic_id=topic.id)
     context = {'entry': entry, 'topic': topic, 'form': form}
-    return render(request, 'learning_logs/edit_entry.xhtml',context)
+    return render(request, 'learning_logs/edit_entry.html',context)
