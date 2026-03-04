@@ -135,7 +135,7 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
             
             # find postgres relationship dynamically
             for rel in relationships.values():
-                if rel and rel[0].get("scheme") == ("postgresql", "pgsql"):
+                if rel and rel[0].get("scheme") in ("postgresql", "pgsql"):
                     postgres = rel[0]
                     
                     DATABASES["default"] = {
