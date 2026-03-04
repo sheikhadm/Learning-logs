@@ -93,7 +93,7 @@ applications:
         python manage.py migrate
 
     relationships:
-      database: postgresql:postgresql
+      database: db:postgresql 
 
     mounts:
       "staticfiles":
@@ -101,7 +101,7 @@ applications:
         source_path: "staticfiles"
 
 services:
-  postgresql:
+  db:                        # changed from postgresql
     type: postgresql:16
 
 routes:
