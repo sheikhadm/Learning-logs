@@ -112,48 +112,70 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 # Add this near the bottom of your settings.py file, before the Production/Upsun settings
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Production/Upsun settings.
-if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
+if os.getenv('PLATFORM_APPLICATION_NAME') is not None:
     DEBUG = False
 
-    # Static dir.
-    # if (os.getenv('PLATFORM_APP_DIR') is not None):
-    #     STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
-
-    # Secret Key.
-    if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
+    if os.getenv('PLATFORM_PROJECT_ENTROPY') is not None:
         SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
 
-    # Production database configuration.
-   
+    # Simple database config using dj-database-url
+    
     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
+    if platform_relationships:
+        relationships = json.loads(base64.b64decode(platform_relationships).decode("utf-8"))
+        for rel in relationships.values():
+            if rel and rel[0].get("scheme") in ("postgresql", "pgsql"):
+                pg = rel[0]
+                db_url = f"postgresql://{pg['username']}:{pg['password']}@{pg['host']}:{pg['port']}/{pg['path']}"
+                DATABASES["default"] = dj_database_url.parse(
+                    db_url,
+                    conn_max_age=600,
+                    ssl_require=False,
+                )
+                break
+# if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
+#     DEBUG = False
 
-    if platform_relationships and platform_relationships.strip():
-        try:
-            # relationships = json.loads(platform_relationships)
-            relationships = json.loads(base64.b64decode(platform_relationships).decode("utf-8"))
+#     # Static dir.
+#     # if (os.getenv('PLATFORM_APP_DIR') is not None):
+#     #     STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
+
+#     # Secret Key.
+#     if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
+#         SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
+
+#     # Production database configuration.
+   
+#     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
+
+#     if platform_relationships and platform_relationships.strip():
+#         try:
+#             # relationships = json.loads(platform_relationships)
+#             relationships = json.loads(base64.b64decode(platform_relationships).decode("utf-8"))
             
-            # find postgres relationship dynamically
-            for rel in relationships.values():
-                if rel and rel[0].get("scheme") in ("postgresql", "pgsql"):
-                    postgres = rel[0]
+#             # find postgres relationship dynamically
+#             for rel in relationships.values():
+#                 if rel and rel[0].get("scheme") in ("postgresql", "pgsql"):
+#                     postgres = rel[0]
                     
-                    DATABASES["default"] = {
-                        "ENGINE": "django.db.backends.postgresql",
-                        "NAME": postgres["path"],
-                        "USER": postgres["username"],
-                        "PASSWORD": postgres["password"],
-                        "HOST": postgres["host"],
-                        "PORT": postgres["port"],
-                        "OPTIONS": {
-                            "sslmode": "disable",
-                        },
-                    }
-                    break
-        except (json.JSONDecodeError, KeyError, IndexError) as e:
-            # If anything goes wrong with PostgreSQL config, stick with SQLite
-            print(f"Warning: Could not configure PostgreSQL database: {e}")
-            pass
+#                     DATABASES["default"] = {
+#                         "ENGINE": "django.db.backends.postgresql",
+#                         "NAME": postgres["path"],
+#                         "USER": postgres["username"],
+#                         "PASSWORD": postgres["password"],
+#                         "HOST": postgres["host"],
+#                         "PORT": postgres["port"],
+#                         "OPTIONS": {
+#                             "sslmode": "disable",
+#                         },
+#                     }
+#                     break
+#         except (json.JSONDecodeError, KeyError, IndexError) as e:
+#             # If anything goes wrong with PostgreSQL config, stick with SQLite
+#             print(f"Warning: Could not configure PostgreSQL database: {e}")
+#             pass
     # if os.getenv("PLATFORM_RELATIONSHIPS"):
     #     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
 
