@@ -120,20 +120,21 @@ if os.getenv('PLATFORM_APPLICATION_NAME') is not None:
     if os.getenv('PLATFORM_PROJECT_ENTROPY') is not None:
         SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
 
-    # Simple database config using dj-database-url
-    
     platform_relationships = os.getenv("PLATFORM_RELATIONSHIPS")
     if platform_relationships:
         relationships = json.loads(base64.b64decode(platform_relationships).decode("utf-8"))
         for rel in relationships.values():
             if rel and rel[0].get("scheme") in ("postgresql", "pgsql"):
                 pg = rel[0]
-                db_url = f"postgresql://{pg['username']}:{pg['password']}@{pg['host']}:{pg['port']}/{pg['path']}"
-                DATABASES["default"] = dj_database_url.parse(
-                    db_url,
-                    conn_max_age=600,
-                    ssl_require=False,
-                )
+                DATABASES["default"] = {
+                    "ENGINE": "django.db.backends.postgresql",
+                    "NAME": pg["path"],
+                    "USER": pg["username"],
+                    "PASSWORD": pg["password"],
+                    "HOST": pg["host"],
+                    "PORT": pg["port"],
+                    "OPTIONS": {"sslmode": "disable"},
+                }
                 break
 # if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
 #     DEBUG = False
