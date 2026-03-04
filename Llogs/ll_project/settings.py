@@ -145,6 +145,9 @@ if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
                         "PASSWORD": postgres["password"],
                         "HOST": postgres["host"],
                         "PORT": postgres["port"],
+                        "OPTIONS": {
+                            "sslmode": "disable",
+                        },
                     }
                     break
         except (json.JSONDecodeError, KeyError, IndexError) as e:
