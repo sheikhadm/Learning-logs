@@ -3,6 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from .models import Topic,Entry
 from .forms import TopicForm, EntryForm
+from django.http import HttpResponse
+
+def test(request):
+    return HttpResponse("Server works")
 # Create your views here.
 def index(request):
     return render(request, 'learning_logs/index.html')
