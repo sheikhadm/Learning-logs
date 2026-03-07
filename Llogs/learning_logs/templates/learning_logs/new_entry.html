@@ -2,35 +2,30 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+
 <div class="container mt-4">
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+<div class="card shadow-sm col-md-7">
+<div class="card-body">
+<p class="mb-3">
+  <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
+</p>
 
-            <p class="mb-3">
-                <a href="{% url 'learning_logs:topic' topic.id %}">
-                    {{ topic }}
-                </a>
-            </p>
+<h5 class="card-title">Add Entry</h5>
 
-            <h4 class="card-title">Add a Neww Entry</h4>
+<form action="{% url 'learning_logs:new_entry' topic.id %}" method="post">
+{% csrf_token %}
 
-           <div class="col-md-6">
+{{ form.as_div }}
 
-            <form action="{% url 'learning_logs:new_entry' topic.id %}" method="post">
-                 {% csrf_token %}
+<button class="btn btn-primary mt-3">
+Add Entry
+</button>
 
-                 {{ form.as_div }}
+</form>
 
-                 <button class="btn btn-primary mt-3" name="submit">
-                    Add Entry
-                 </button>
-            </form>
-
-    </div>
-
-        </div>
-    </div>
+</div>
+</div>
 
 </div>
 {% endblock content %}
