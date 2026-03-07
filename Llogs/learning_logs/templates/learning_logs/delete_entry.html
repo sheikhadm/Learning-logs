@@ -1,0 +1,34 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+<div class="card-body">
+
+<h4 class="text-danger">Delete Entry</h4>
+
+<p>Are you sure you want to delete this entry?</p>
+
+<div class="alert alert-warning">{{ entry.text|linebreaks }}</div>
+
+<form method="post">
+{% csrf_token %}
+
+<button type="submit" class="btn btn-danger">
+Delete
+</button>
+
+<a href="{% url 'learning_logs:topic' entry.topic.id %}" class="btn btn-secondary">
+Cancel
+</a>
+
+</form>
+
+</div>
+</div>
+
+</div>
+
+{% endblock content %}

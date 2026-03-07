@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from .models import Topic,Entry
@@ -75,3 +75,31 @@ def edit_entry(request,entry_id):
             return redirect('learning_logs:topic', topic_id=topic.id)
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html',context)
+
+@login_required
+def delete_entry(request, entry_id):
+    entry = get_object_or_404(Entry, id=entry_id)
+
+    # ensure user owns the topic
+    if entry.topic.owner != request.user:
+        raise Http404
+
+    if request.method == "POST":
+        entry.delete()
+        return redirect('learning_logs:topic', topic_id=entry.topic.id)
+
+    return render(request, 'learning_logs/delete_entry.html', {'entry': entry})
+
+@login_required
+def delete_topic(request, topic_id):
+    topic = get_object_or_404(Topic, id=topic_id)
+
+    # Ensure only the owner can delete
+    if topic.owner != request.user:
+        raise Http404
+
+    if request.method == "POST":
+        topic.delete()
+        return redirect('learning_logs:topics')
+
+    return render(request, 'learning_logs/delete_topic.html', {'topic': topic})
